@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>D3: A bar chart whose data updates with new data (labels, too)</title>
+      <script type="text/javascript" src="d3/d3.v3.js"></script>
+    <style type="text/css">
+      /* No style rules here yet */   
+    </style>
+  </head>
+  <body>
+     <script type = "text/javascript">
+
+              //Width and height
+              var w = 2000;
+              var h = 750;
+              var barPadding = 1;
+              var svg = d3.select("body")
+                          .append("svg")
+                          .attr("width", w)
+                          .attr("height", h);
+
+
+              d3.csv("neighborhood.csv", function(dataset){
+                
+                var max = d3.max(dataset, function(d){ return parseFloat(d.Value); });
+                var min = d3.min(dataset, function(d){ return parseFloat(d.Value); });
+                var scale = d3.scale.linear()
+                             .domain([min, max])
+                              .range([0, h]);
+
+                var widd = w / dataset.length - barPadding;
+
+                 svg.selectAll("rect")
+                     .data(dataset)
+                     .enter()
+                     .append("rect")
+                     .attr("x", function(d, i) {
+                        return i * (widd+barPadding);
+                     })
+                     .attr("y", function(d) {
+                         return h - scale(parseFloat(d.Value));
+                     })
+                    .attr("height", function(d){
+                      return scale(parseFloat(d.Value));
+                    })
+                    .attr("width", widd);
+
+              });
+
+
+    </script>
+  </body> 
+</html>

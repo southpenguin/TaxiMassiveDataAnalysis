@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <meta charset = "utf-8">
+     
+      <style type="text/css"> 
+         path {
+          stroke: lightgray;
+         }
+        
+    </style>
+  </head>
+  <body>
+      <script type="text/javascript" src="d3/d3.v3.js"></script>
+     <script type = "text/javascript">
+
+              //Width and height
+              var w = 1500;
+              var h = 1500;
+              var padding = 30; 
+        
+              var projection = d3.geo.mercator()
+                           .center([-73.81,40.63])
+                           .translate([w/2, h/2])
+                           .scale([600000]);
+
+              var svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+              var path = d3.geo.path()
+                        .projection(projection);
+              
+              d3.csv("bottomdrop.csv", function(dataset){    
+                  d3.json("nyc.geojson", function(json) { 
+
+
+
+
+                    for (var i = 0; i < dataset.length; i++){
+
+                      var dataneighbor = dataset[i].Neighborhood;
+
+                      var dataValue = dataset[i].Value;
+
+                      for (var j = 0; j < json.features.length; j++){
+
+                          var jsonneighbor = json.features[j].properties.neighborhood;
+
+                          if (dataneighbor == jsonneighbor){
+
+                            json.features[j].properties.value = dataValue;
+                            break;
+                          }
+                       }
+                    }
+
+
+                  svg.selectAll("path")
+                           .data(json.features)
+                           .enter()
+                           .append("path")
+                           .attr("d", path)
+                           .style("fill", function(d){
+                              var value = d.properties.value;
+                              if(value){
+                                  return color(parseFloat(value));
+                              }else{
+                                  return "#fafafa";
+                              }
+                           });
+
+                })
+              })
+          
+
+          function color (d) {
+              if (d >= 15000)
+                return "#081d58"
+              else if (d >= 10000)
+                return "#253494"
+              else if (d>=5000)
+                return "#225ea8"
+              else if (d>=2500)
+                return "#1d91c0"
+              else if (d>=1000)
+                return "#41b6c4"
+              else if (d>=500)
+                return "#7fcdbb"
+              else if (d>=100)
+                return "#c7e9b4"
+              else if (d>=50)
+                return "#edf8b1"
+              else
+                return "#ffffd9"
+            
+
+          }
+    </script>
+  </body> 
+</html>

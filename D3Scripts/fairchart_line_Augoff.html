@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>STATUS</title>
+      <script type="text/javascript" src="d3/d3.v3.js"></script>
+    <style type="text/css">
+      path {
+        stroke-width: 2;
+        fill: none;
+      }
+       
+      line {
+          stroke: black;
+      }
+       
+      text {
+          font-family: Arial;
+          font-size: 3pt;
+      }
+      body {
+        background: #BFBFBF;
+
+      }
+    </style>
+  </head>
+  <body>
+     <script type = "text/javascript">
+
+              //Width and height
+              var w = 1000;
+              var H = 750;
+              var h = 700
+              var barPadding = 1;
+              var svg = d3.select("body")
+                          .append("svg")
+                          .attr("width", w)
+                          .attr("height", H);
+
+
+
+              d3.csv("Status_Augoff.csv", function(data){
+
+
+                var max = d3.max(data, function(d){ return parseFloat(d.Avg_Fair); });
+                var min = d3.min(data, function(d){ return parseFloat(d.Avg_Fair); });
+
+                 var scale = d3.scale.linear()
+                             .domain([min, max])
+                              .range([50, h-50]);
+                
+                  var xScale = d3.scale.ordinal()
+                              .domain(d3.range(data.length))
+                             .rangeRoundBands([0, w], 0.05);
+
+                  var line = d3.svg.line()
+                            .x(function(d,i) {  return xScale(i); })
+                            .y(function(d) {return h - scale(parseFloat(d.Avg_Fair)); });
+
+
+
+                   svg.selectAll("path")
+                      .data(data)
+                      .enter()
+                      .append("svg:path")
+                      .attr("d", line(data))
+                      .attr("stroke","red");
+
+                    svg.selectAll("circle")
+                      .data(data)
+                      .enter()
+                      .append("circle")
+                      .attr("cx",  function(d,i) {  return xScale(i); })
+                      .attr("cy",  function(d) {return h - scale(parseFloat(d.Avg_Fair));})
+                      .attr("r", 3 )
+                      .attr("fill", "black")
+
+
+
+                var max_time = d3.max(data, function(d){ return parseFloat(d.Avg_Time); });
+                var min_time = d3.min(data, function(d){ return parseFloat(d.Avg_Time); });
+
+                 var scale_time = d3.scale.linear()
+                             .domain([min_time, max_time])
+                              .range([50, h-50]);
+                
+
+                  var linetime = d3.svg.line()
+                            .x(function(d,i) {  return xScale(i); })
+                            .y(function(d) {return h - scale_time(parseFloat(d.Avg_Time)); });
+
+
+
+                    svg.selectAll("time_path")
+                      .data(data)
+                      .enter()
+                      .append("svg:path")
+                      .attr("d", linetime(data))
+                      .attr("stroke","blue");
+
+                    svg.selectAll("time_circle")
+                      .data(data)
+                      .enter()
+                      .append("circle")
+                      .attr("cx",  function(d,i) {  return xScale(i); })
+                      .attr("cy",  function(d) {return h - scale_time(parseFloat(d.Avg_Time));})
+                      .attr("r", 3 )
+                      .attr("fill", "black")
+
+
+
+                var max_Pass = d3.max(data, function(d){ return parseFloat(d.Avg_Passenger); });
+                var min_Pass = d3.min(data, function(d){ return parseFloat(d.Avg_Passenger); });
+
+                 var scale_Pass = d3.scale.linear()
+                             .domain([min_Pass, max_Pass])
+                              .range([50, h-50]);
+                
+
+                  var linePass = d3.svg.line()
+                            .x(function(d,i) {  return xScale(i); })
+                            .y(function(d) {return h - scale_Pass(parseFloat(d.Avg_Passenger)); });
+
+
+
+                    svg.selectAll("pass_path")
+                      .data(data)
+                      .enter()
+                      .append("svg:path")
+                      .attr("d", linePass(data))
+                      .attr("stroke", "yellow");
+
+                    svg.selectAll("pass_circle")
+                      .data(data)
+                      .enter()
+                      .append("circle")
+                      .attr("cx",  function(d,i) {  return xScale(i); })
+                      .attr("cy",  function(d) {return h - scale_Pass(parseFloat(d.Avg_Passenger));})
+                      .attr("r", 3 )
+                      .attr("fill", "black")
+
+
+
+                var max_L = d3.max(data, function(d){ return parseFloat(d.Avg_Length); });
+                var min_L = d3.min(data, function(d){ return parseFloat(d.Avg_Length); });
+
+                 var scale_L = d3.scale.linear()
+                             .domain([min_L, max_L])
+                              .range([50, h-50]);
+                
+
+                  var lineL = d3.svg.line()
+                            .x(function(d,i) {  return xScale(i); })
+                            .y(function(d) {return h - scale_L(parseFloat(d.Avg_Length)); });
+
+
+
+                    svg.selectAll("L_path")
+                      .data(data)
+                      .enter()
+                      .append("svg:path")
+                      .attr("d", lineL(data))
+                      .attr("stroke", "green");
+
+                    svg.selectAll("L_circle")
+                      .data(data)
+                      .enter()
+                      .append("circle")
+                      .attr("cx",  function(d,i) {  return xScale(i); })
+                      .attr("cy",  function(d) {return h - scale_L(parseFloat(d.Avg_Length));})
+                      .attr("r", 3 )
+                      .attr("fill", "black")
+
+
+
+              });
+
+
+
+
+
+
+
+
+
+    </script>
+  </body> 
+</html>

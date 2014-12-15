@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FAIR and COUNT</title>
+      <script type="text/javascript" src="d3/d3.v3.js"></script>
+    <style type="text/css">
+      /* No style rules here yet */   
+    </style>
+  </head>
+  <body>
+     <script type = "text/javascript">
+
+              //Width and height
+              var w = 2000;
+              var h = 700;
+              var H = 750
+              var barPadding = 1;
+              var svg = d3.select("body")
+                          .append("svg")
+                          .attr("width", w)
+                          .attr("height", H);
+
+
+              d3.csv("fair_count_80off.csv", function(dataset){
+                
+                var max = d3.max(dataset, function(d){ return parseFloat(d.Count); });
+                var min = d3.min(dataset, function(d){ return parseFloat(d.Count); });
+                var scale = d3.scale.linear()
+                             .domain([min, max])
+                              .range([0, h]);
+                var xScale = d3.scale.ordinal()
+                              .domain(d3.range(dataset.length))
+                             .rangeRoundBands([0, w], 0.05);
+
+                 var color = d3.scale.quantize()
+                            .domain([min,max])
+                            .range(["#D6D6FF","#9999FF","#7070FF","#4747FF","#2929CC", "#1F1F99", "#141466", "#0F0F4C"]);
+
+                //var widd = w / dataset.length - barPadding;
+
+                 svg.selectAll("rect")
+                     .data(dataset)
+                     .enter()
+                     .append("rect")
+                     .attr("x", function(d, i) {
+                        return xScale(i);
+                     })
+                     .attr("y", function(d) {
+                         return h - scale(parseFloat(d.Count));
+                     })
+                    .attr("height", function(d){
+                      return scale(parseFloat(d.Count));
+                    })
+                    .attr("width", xScale.rangeBand())
+                    .attr("fill", function(d){return color(parseFloat(d.Count));});
+
+                svg.selectAll("text")
+                  .data(dataset)
+                  .enter()
+                  .append("text")
+                  .text(function(d,i){
+                    return parseFloat(d.Fair)-0.5;
+                  })
+                  .attr("x", function(d, i) {
+                        return xScale(i) + xScale.rangeBand()/2;
+                     })
+                  .attr("y", function(d) {
+                         return H - 40;
+                     })
+                  .attr("font-size","10px");
+
+
+
+
+              });
+
+
+    </script>
+  </body> 
+</html>
