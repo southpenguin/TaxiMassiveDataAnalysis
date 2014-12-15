@@ -1,0 +1,10 @@
+file = LOAD 'test/top10.csv' USING PigStorage(',') AS (licence:chararray, pickup:chararray, dropoff:chararray, passenger:int, time:int, distance:double, a:double, b:double, c:double, d:double);
+
+temp = GROUP file BY ToDate(pickup);
+
+dupresult = FOREACH temp GENERATE COUNT(file);
+
+result = DISTINCT dupresult;
+
+STORE result INTO '$OUTPUT';
+
